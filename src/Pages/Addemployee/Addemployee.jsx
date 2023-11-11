@@ -96,8 +96,12 @@ const Addemployee = () => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-    
+    //emp add variable
+    const [responce  , setResponce] = useState("");
+    const [CreatedbyUser  , setCreatedbyUser] = useState("");
+
       const getAlldepartments = async () => {
+
         try {
           const response = await axios.get(`http://localhost:8000/alldepartments`);
           console.log("response: ", response);
@@ -110,12 +114,13 @@ const Addemployee = () => {
 
 
     const Addemployeedata = async () => {
-
+      setCreatedbyUser(responce.email)
+      console.log("cre",CreatedbyUser)
 if (emloyeename && age && businessTravel && dailyRate && department && distanceFromHome && education <= 5 && educationField && employeeNumber &&
     environmentSatisfaction <=4 && gender && hourlyRate && jobInvolvement <=4 && jobLevel <=5 && jobRole && jobSatisfaction <=4 && maritalStatus &&
     monthlyIncome && monthlyRate && numCompaniesWorked && over18 && overTime && percentSalaryHike && performanceRating <=4 &&
     relationshipSatisfaction <=4 && standardHours && stockOptionLevel <=3 && totalWorkingYears && trainingTimesLastYear <=6 && workLifeBalance <=4 &&
-    yearsAtCompany && yearsSinceLastPromotion && yearsWithCurrManager
+    yearsAtCompany && yearsSinceLastPromotion && yearsWithCurrManager && CreatedbyUser
     ) {
 
           try {
@@ -153,7 +158,9 @@ if (emloyeename && age && businessTravel && dailyRate && department && distanceF
                 workLifeBalance,
                 yearsAtCompany,
                 yearsSinceLastPromotion,
-                yearsWithCurrManager
+                yearsWithCurrManager,
+                CreatedbyUser
+                
             });
     
             // Handle the response according to your needs
@@ -339,6 +346,36 @@ return;
     
         
       };
+      useEffect(() => {
+
+        const getProfile = async () => {
+          try {
+            let response = await axios.get(`http://localhost:8000/api/v1/profile`,
+              {
+                withCredentials: true,
+                headers: {
+                  'Cache-Control': 'no-cache',
+                  'Pragma': 'no-cache',
+                  'Expires': '0',
+                }
+              });
+              console.log("response: ", response.data);
+              setResponce(response.data)
+              setCreatedbyUser(responce.email);
+              console.log("res",responce.email);
+                            console.log("xx",CreatedbyUser);
+
+
+          } catch (error) {
+            console.log("axios error: ", error);
+      
+      
+          }
+      
+        }
+        getProfile();
+      
+      }, [])
     
      useEffect(() => {
         console.log('asdasd')
