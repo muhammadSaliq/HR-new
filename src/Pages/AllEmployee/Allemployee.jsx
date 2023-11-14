@@ -84,7 +84,7 @@ const AllEmployee = () => {
         <span className="text-center inline mt-2">Years in the Company: {value.yearsAtCompany}</span>
 
         <div className="flex mt-4 space-x-3 md:mt-6 justify-center">
-        <a  className="inline-flex items-center bg-black text-yellow-500 px-4 py-2 text-sm font-medium text-center text-white rounded-lg hover:bg-yellow-500 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300 ">View</a> 
+        <a onClick={()=>{navigate(`/Employeedetails/${value._id}`, { replace: true }) }}  className="inline-flex items-center bg-black text-yellow-500 px-4 py-2 text-sm font-medium text-center text-white rounded-lg hover:bg-yellow-500 hover:text-black focus:ring-4 focus:outline-none focus:ring-blue-300 ">View</a> 
         <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">Edit</a> 
 
        <a href="#" className="inline-flex bg-black text-red-500 items-center px-4 py-2 text-sm font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-red-700 hover:text-black focus:ring-4 focus:outline-none focus:ring-gray-200 ">Delete</a>

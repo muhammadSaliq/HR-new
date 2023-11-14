@@ -36,7 +36,6 @@ const EmployeeDetails = () => {
         marginTop: '15px',
         backgroundColor: '#f9f6ee',
         width: '1100px', // Adjust the width as needed
-        // background: 'url("https://www.osimo.com.tr/assets/images/media-bg.jpg") center/cover no-repeat',
       };
     
 
@@ -68,7 +67,7 @@ const EmployeeDetails = () => {
         <Navbars/>
 
             <div className='rootcontainer2'>
-                <h2 className="heado">{allemployees.emloyeename}Employees</h2>
+                <h2 className="heado">{allemployees.emloyeename}</h2>
             </div>
 
 
@@ -76,42 +75,90 @@ const EmployeeDetails = () => {
     <table className="w-full text-sm text-left text-gray-500 ">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
             <tr>
+            <th scope="col" className="px-6 py-3">
+                    
+                    </th>
+            <th scope="col" className="px-6 py-3">
+                    S#
+                    </th>
                 <th scope="col" className="px-6 py-3">
-                    Group name
+                    General Information
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    Experience
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Clients
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Contact
+                    Data
                 </th>
             </tr>
         </thead>
         <tbody>
 
-
-
         <tr className="bg-white border-b">
-        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-            value.groupname
-        </th>
-        <td className="px-6 py-4">
-        value.experience
+        <th scope="col" className="px-6 py-3">
+                    
+                    </th>
+        <td scope="row" className="px-6 py-4 font-medium text-black whitespace-nowrap">
+            1.
+        </td>
+        <td scope="row" className="px-6 py-4 font-medium text-black whitespace-nowrap">
+            Department
         </td>
         <td className="px-6 py-4">
-        value.totalclients
+        {allemployees.department}
         </td>
-        <td className="px-6 py-4">
-            value.whatsapp
-        </td>
+
         </tr>
-
-
            
         </tbody>
+
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
+            <tr>
+            <th scope="col" className="px-6 py-3">
+                    
+                    </th>
+            <th scope="col" className="px-6 py-3">
+                    S#
+                    </th>
+                <th scope="col" className="px-6 py-3">
+                    Additional Information
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Data
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+<tr className="bg-white border-b">
+<th scope="col" className="px-6 py-3">
+                    
+                    </th>
+<th scope="row" className="px-6 py-4 font-medium text-black whitespace-nowrap">
+    1.
+</th>
+<th scope="row" className="px-6 py-4 font-medium text-black whitespace-nowrap">
+environment Satisfaction
+</th>
+<td className="px-6 py-4">
+{allemployees.environmentSatisfaction}
+</td>
+
+</tr>
+<tr className="bg-white border-b">
+<th scope="col" className="px-6 py-3">
+                    
+                    </th>
+<th scope="row" className="px-6 py-4 font-medium text-black whitespace-nowrap">
+    2.
+</th>
+<th scope="row" className="px-6 py-4 font-medium text-black whitespace-nowrap">
+environment Satisfaction
+</th>
+<td className="px-6 py-4">
+{allemployees.environmentSatisfaction}
+</td>
+
+</tr>
+</tbody>
     </table>
 </div>
 
