@@ -2,19 +2,50 @@ import { useContext, useEffect } from 'react';
 import { Link, json, useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbars from '../../Ccomponents/Header/Navbar/Navbars';
 import Footer from '../../Ccomponents/Footer/Footer';
 import './department.css';
-import DashNavbar from '../../Ccomponents/Header/DashboardNavbar/DashNavbar';
 
 const Department = () => {
     const navigate = useNavigate();
     const [departmentname, setdepartmentname] = useState("");
     const [alldepartmentss, setalldepartmentss] = useState([]);
+    const [openDialog, setOpenDialog] = useState(false);
     const [departmentBoolean, setdepartmentBoolean] = useState(false);
     const [Delete , setdelete] = useState(false);
+    const [contact, setEmail] = React.useState('');
+    const [departmentmanager, setdeptman] = React.useState('');
+    const [description, setdeptdes] = React.useState('');
+    const [openEditDialog, setOpenEditDialog] = useState(false);
+    const [SingleDepartment, setSingleDepartment] = useState([]);
+
+
+
+    const fetchSingleDepartment = async(id) => {
+        const response = await axios.get(`http://localhost:8000/geteditdepaprtment/${id}`);
+        console.log("response: ", response);
+      console.log(SingleDepartment);
+      setSingleDepartment(response.data.Product);
+            }
+
+    const handlecchange = (ev) => {
+        const {value, name} = ev.target;
+        setSingleDepartment(()=> {
+            return {
+                ...SingleDepartment, [name]: value
+            }
+        })
+
+ 
+    };
     const buttonStyle = {
         background: '#EC0C36',
         color: 'white',
@@ -34,12 +65,48 @@ const Department = () => {
         borderRadius: '8px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
         marginTop: '15px',
-        width: '500px', // Adjust the width as needed
+        width: '500px', 
         // background: 'url("https://www.osimo.com.tr/assets/images/media-bg.jpg") center/cover no-repeat',
       };
     
 
     
+      const handleDialogOpen = () => {
+        setOpenDialog(true);
+      };
+    
+      const handleDialogClose = () => {
+        setOpenDialog(false);
+      };
+      const deleteData = async (id)=>{
+        try {
+          const response = await axios.get(`http://localhost:8000/deletedepartment/${id}`)
+          console.log("response: ", response.data);
+        } catch (error) {
+          console.log("error in deleting department", error);
+        }
+        alert("department deleted");
+        window.location.reload(false);
+      };
+      const approveData = async (id)=>{
+        try {
+          const response = await axios.get(`http://localhost:8000/activedepartment/${id}`)
+          console.log("response: ", response.data);
+        } catch (error) {
+          console.log("error in active department", error);
+        }
+        alert("department activated");
+        window.location.reload(false);
+      };
+      const handleSubscribe = () => {
+        
+        console.log('Department Name:', departmentname);
+        console.log('Email/Contact:', contact);
+        console.log('Department Manager  :', departmentmanager);
+        console.log('Department Description  :', description);
+    
+        handleDialogClose();
+      };
     
     
       const getAlldepartments = async () => {
@@ -58,10 +125,13 @@ const Department = () => {
           try {
             const response = await axios.post('http://localhost:8000/adddepartments', {
                 departmentname,
+                contact,
+                departmentmanager,
+                description
                 
             });
     
-            // Handle the response according to your needs
+          
             if (response.status === 201) {
               console.log('Signup successful');
               alert("Department successfully Entered");
@@ -75,6 +145,20 @@ const Department = () => {
     
       };
 
+     // Function to handle opening the dialog for editing
+    const handleEditDialogOpen = () => {
+      setOpenEditDialog(true);
+  };
+  // Function to handle closing the edit dialog
+  const handleEditDialogClose = () => {
+    setOpenEditDialog(false);
+};
+ const handleEdit = async (id) => {
+        const UserData = { ...SingleDepartment};
+        const response = await axios.put(`http://localhost:8000/editdepartment/${id}`, UserData);
+    }
+    
+
     useEffect(() => {
         console.log('asdasd')
         getAlldepartments()
@@ -85,38 +169,205 @@ const Department = () => {
     
     return (
         <>
-        <DashNavbar/>
+        <Navbars/>
 
-        <div className='rootcontainer'>
+        <div className='rootcontainer2' style={{ backgroundColor: 'white'  }} >
+                <h2 className="heado">Departments</h2>
+                <Divider sx={{ margin: '10px 0', backgroundColor: 'black' }} />
+            </div>
+            <div className='flex  justify-evenly flex-wrap my-4' ></div>
+
+
+
+        {/* <div className='rootcontainer'>
                 <h2>Add Department</h2>
                 <TextField fullWidth value={departmentname}  onChange={(event) => { setdepartmentname(event.target.value); }} name="departmentname" label="department Name" variant="outlined" />
         <Button fullWidth onClick={AddDepartment} variant="contained">Add Department</Button>
-            </div>
-            <div className='rootcontainer2'>
+            </div> */}
+            {/* Material-UI Dialog */}
+      <Dialog open={openDialog} onClose={handleDialogClose}  >
+        <DialogTitle>Add Department</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <TextField
+              autoFocus
+              margin='dense'
+              id='name'
+              label='Department Name'
+              type='text'
+              fullWidth
+              value={departmentname}
+              onChange={(event) => setdepartmentname(event.target.value)}
+            />
+            <TextField
+              autoFocus
+              margin='dense'
+              id='name'
+              label='Email/Contact'
+              type='text'
+              fullWidth
+              value={contact}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <TextField
+              autoFocus
+              margin='dense'
+              id='name'
+              label='Department Manager'
+              type='text'
+              fullWidth
+              value={departmentmanager}
+              onChange={(event) => setdeptman(event.target.value)}
+            />
+            <TextField
+              autoFocus
+              margin='dense'
+              id='name'
+              label='Department Description'
+              type='text'
+              fullWidth
+              value={description}
+              onChange={(event) => setdeptdes(event.target.value)}
+            />
+            
+            
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color='primary'>
+            Cancel
+          </Button>
+          <Button onClick={AddDepartment} color='primary'>
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openEditDialog} onClose={handleEditDialogClose}  >
+        <DialogTitle>Edit Department</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <TextField
+              autoFocus
+              margin='dense'
+              id='departmentname'
+              label='Department Name'
+              name='departmentname'
+              type='text'
+              fullWidth
+              value={SingleDepartment.departmentname} onChange={handlecchange} 
+            />
+            <TextField
+              autoFocus
+              margin='dense'
+              id='contact'
+              label='Email/Contact'
+              type='text'
+                            name='contact'
+              fullWidth
+              value={SingleDepartment.contact} onChange={handlecchange} 
+            />
+            <TextField
+              autoFocus
+              margin='dense'
+              id='departmentmanager'
+              label='Department Manager'
+              type='text'
+              name='departmentmanager'
+              fullWidth
+              value={SingleDepartment.departmentmanager} onChange={handlecchange} 
+            />
+            <TextField
+              autoFocus
+              margin='dense'
+              id='description'
+              label='Department Description'
+              type='text'
+              name='description'
+              fullWidth
+              value={SingleDepartment.description} onChange={handlecchange} 
+            />
+            
+            
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditDialogClose} color='primary'>
+            Cancel
+          </Button>
+          <Button onClick={() => {handleEdit(SingleDepartment._id)}}
+          // onClick={AddDepartment} 
+          color='primary'>
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <div style={{
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center', 
+  paddingTop: '20px'
+}}>
+  <Button
+    variant='outlined'
+    onClick={handleDialogOpen}
+    sx={{
+      color: 'rgb(236, 116, 12)',
+      backgroundColor: 'Black', 
+      fontWeight: 'bold',
+      padding: '8px 16px',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      '&:hover': {
+        color: 'Black',
+        backgroundColor: 'rgb(236, 116, 12)',
+      },
+     
+    }}
+  >
+    Add Department
+  </Button>
+</div>
+            {/* <div className='rootcontainer2' style={{ backgroundColor: 'white' }} >
                 <h2 className="heado">Departments</h2>
-            </div>
+            </div> */}
             <div className='flex  justify-evenly flex-wrap my-4' >
 
                {alldepartmentss.map((value) => (
 
       <div style={containerStyle}>
         <h1 className="headoo">{value.departmentname}</h1>
-        <div className="flex mt-4 space-x-3 md:mt-6 justify-center">
-        <a onClick={()=>{navigate(`/departmentEmployee/${value.departmentname}`, { replace: true }) }} className="inline-flex items-center bg-black text-yellow-500 px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">View</a> 
-        <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">Edit</a> 
+        <p className="headoos">{value.departmentmanager}</p>
+        <p className="headoos">{value.contact}</p>
+        {value.executive == "0" && (<><p className="headoos text-red-500 font-bold">Status: Inactive</p></>)}
 
-       <a href="#" className="inline-flex bg-black text-red-500 items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 ">Delete</a>
+        <div className="flex mt-4 space-x-3 md:mt-6 justify-center">
+        {value.executive == "0" ? (<>
+        </>): (<>
+                <a onClick={()=>{navigate(`/departmentEmployee/${value.departmentname}`, { replace: true }) }} className="inline-flex items-center bg-black text-yellow-500 px-4 py-2 text-sm font-medium text-center text-white  rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">View</a> 
+
+        </>)}
+        {/* <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">Edit</a>  */}
+{/* Edit Button */}
+<a
+                                onClick={() => {
+                                    // Open the edit dialog on clicking "Edit"
+                                    handleEditDialogOpen(); fetchSingleDepartment(value._id)
+                                }}
+                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300" >
+                                Edit
+                            </a>
+       <button onClick={()=>{approveData(value._id)}}className="inline-flex bg-black text-green-500 items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 ">Active</button>
+       <button onClick={()=>{deleteData(value._id)}} className="inline-flex bg-black text-red-500 items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 ">InActive</button>
+
         </div>
 
       </div>
-
-
-
                ))}
                </div>
-
-            <Footer/>
-        </>
+                
+    </>
+        
     );
 }
 

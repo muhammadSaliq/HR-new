@@ -16,15 +16,31 @@
     justify-content: center;
     margin: 60px auto;
     background-color: black;
+    display: flex;
+  justify-content: flex-start; 
+  align-items: flex-start;
 
 }
 .heado {
     font-size: 40px;
 font-weight: bold;
 color: rgb(236, 116, 12);
+padding-right: 1050px;
 }
+@media (max-width: 768px) {
+    .heado {
+      font-size: 10px;
+      padding-right: 20px; 
+      
+    }
+  }
 .headoo {
     font-size: 40px;
     font-weight: bold;
     text-align: center;
+}
+
+.headoos {
+  font-size: 20px;
+  text-align: center;
 }
